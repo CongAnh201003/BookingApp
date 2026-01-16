@@ -22,10 +22,19 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
 
     private Context context;
     private List<Room> roomList;
+    
+    private long checkInTime, checkOutTime;
+    private int guests;
 
     public RoomAdapter(Context context, List<Room> roomList) {
         this.context = context;
         this.roomList = roomList;
+    }
+    
+    public void setSearchCriteria(long checkIn, long checkOut, int guests) {
+        this.checkInTime = checkIn;
+        this.checkOutTime = checkOut;
+        this.guests = guests;
     }
 
     @NonNull
@@ -39,7 +48,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     public void onBindViewHolder(@NonNull RoomViewHolder holder, int position) {
         Room room = roomList.get(position);
         holder.txtName.setText(room.getName());
-        holder.txtDetails.setText("Diện tích: " + room.getArea() + " | " + room.getBedCount() + " Giường");
+        holder.txtDetails.setText("Diện tích: " + room.getArea() + " | Sức chứa: " + (room.getCapacityAdults() + room.getCapacityChildren()) + " người");
         holder.txtPrice.setText(String.format("%,.0f VNĐ", room.getPrice()));
         holder.txtCategory.setText(room.getCategory());
         
@@ -51,6 +60,10 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, RoomDetailActivity.class);
             intent.putExtra("room_data", room);
+            // Truyền tiếp tiêu chí tìm kiếm sang trang chi tiết
+            intent.putExtra("checkIn", checkInTime);
+            intent.putExtra("checkOut", checkOutTime);
+            intent.putExtra("guests", guests);
             context.startActivity(intent);
         });
     }
