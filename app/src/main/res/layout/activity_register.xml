@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back"
+    android:background="#FFFFFF"
     tools:context=".Activity.RegisterActivity">
 
     <!-- Thanh tiêu đề và nút Back -->
@@ -26,7 +26,8 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:contentDescription="Nút quay lại"
-            android:src="@drawable/baseline_arrow_back_ios_24" />
+            android:src="@drawable/baseline_arrow_back_ios_24"
+            app:tint="#333333" />
 
         <TextView
             android:layout_width="0dp"
@@ -35,7 +36,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Tạo tài khoản"
-            android:textColor="@android:color/white"
+            android:textColor="#333333"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -59,7 +60,8 @@
                 android:layout_height="80dp"
                 android:layout_marginBottom="24dp"
                 android:contentDescription="Ảnh đại diện người dùng"
-                android:src="@drawable/user" />
+                android:src="@drawable/user"
+                app:tint="#333333" />
 
             <!-- Tên đăng nhập -->
             <com.google.android.material.textfield.TextInputLayout
@@ -67,16 +69,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:boxStrokeColor="@android:color/white"
-                app:hintTextColor="@android:color/white">
+                app:boxStrokeColor="#333333"
+                app:hintTextColor="#333333">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtTenDangNhap"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Tên đăng nhập"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="#CCCCCC" />
+                    android:textColor="#333333"
+                    android:textColorHint="#666666" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Mật khẩu -->
@@ -85,10 +87,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:boxStrokeColor="@android:color/white"
-                app:hintTextColor="@android:color/white"
+                app:boxStrokeColor="#333333"
+                app:hintTextColor="#333333"
                 app:passwordToggleEnabled="true"
-                app:passwordToggleTint="@android:color/white">
+                app:passwordToggleTint="#333333">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtMatKhau"
@@ -96,8 +98,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Mật khẩu"
                     android:inputType="textPassword"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="#CCCCCC" />
+                    android:textColor="#333333"
+                    android:textColorHint="#666666" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Nhập lại mật khẩu -->
@@ -106,10 +108,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:boxStrokeColor="@android:color/white"
-                app:hintTextColor="@android:color/white"
+                app:boxStrokeColor="#333333"
+                app:hintTextColor="#333333"
                 app:passwordToggleEnabled="true"
-                app:passwordToggleTint="@android:color/white">
+                app:passwordToggleTint="#333333">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtMatKhauhai"
@@ -117,8 +119,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Nhập lại mật khẩu"
                     android:inputType="textPassword"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="#CCCCCC" />
+                    android:textColor="#333333"
+                    android:textColorHint="#666666" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Họ và tên -->
@@ -127,8 +129,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:boxStrokeColor="@android:color/white"
-                app:hintTextColor="@android:color/white">
+                app:boxStrokeColor="#333333"
+                app:hintTextColor="#333333">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtHoten"
@@ -136,8 +138,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Họ và tên (trên giấy tờ)"
                     android:inputType="textPersonName"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="#CCCCCC" />
+                    android:textColor="#333333"
+                    android:textColorHint="#666666" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Email -->
@@ -146,8 +148,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:boxStrokeColor="@android:color/white"
-                app:hintTextColor="@android:color/white">
+                app:boxStrokeColor="#333333"
+                app:hintTextColor="#333333">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtEmail"
@@ -155,8 +157,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="#CCCCCC" />
+                    android:textColor="#333333"
+                    android:textColorHint="#666666" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Số điện thoại -->
@@ -165,8 +167,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:boxStrokeColor="@android:color/white"
-                app:hintTextColor="@android:color/white">
+                app:boxStrokeColor="#333333"
+                app:hintTextColor="#333333">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtPhoneNumber"
@@ -174,8 +176,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Số điện thoại"
                     android:inputType="phone"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="#CCCCCC" />
+                    android:textColor="#333333"
+                    android:textColorHint="#666666" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- CCCD / Passport -->
@@ -184,8 +186,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:boxStrokeColor="@android:color/white"
-                app:hintTextColor="@android:color/white">
+                app:boxStrokeColor="#333333"
+                app:hintTextColor="#333333">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtIdentityNumber"
@@ -193,8 +195,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Số CCCD/Passport"
                     android:inputType="text"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="#CCCCCC" />
+                    android:textColor="#333333"
+                    android:textColorHint="#666666" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Hàng chứa Ngày sinh và Giới tính -->
@@ -213,8 +215,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    app:boxStrokeColor="@android:color/white"
-                    app:hintTextColor="@android:color/white">
+                    app:boxStrokeColor="#333333"
+                    app:hintTextColor="#333333">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtDateOfBirth"
@@ -224,8 +226,8 @@
                         android:inputType="date"
                         android:focusable="false"
                         android:clickable="true"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#CCCCCC" />
+                        android:textColor="#333333"
+                        android:textColorHint="#666666" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Giới tính -->
@@ -236,8 +238,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
-                    app:boxStrokeColor="@android:color/white"
-                    app:hintTextColor="@android:color/white">
+                    app:boxStrokeColor="#333333"
+                    app:hintTextColor="#333333">
 
                     <AutoCompleteTextView
                         android:id="@+id/actvGender"
@@ -245,7 +247,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Giới tính"
                         android:inputType="none"
-                        android:textColor="@android:color/white"
+                        android:textColor="#333333"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
 
