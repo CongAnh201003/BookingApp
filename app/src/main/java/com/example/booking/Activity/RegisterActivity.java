@@ -3,15 +3,12 @@ package com.example.booking.Activity;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.booking.Model.User;
 import com.example.booking.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -19,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.Calendar;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -61,9 +57,14 @@ public class RegisterActivity extends AppCompatActivity {
         imgBack = findViewById(R.id.imgBack);
     }
 
+    // TÌM ĐẾN HÀM initFirebase() TRONG RegisterActivity.java
     private void initFirebase() {
         mAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
+
+        // Xóa cái link cũ (link console firebase) và thay bằng link Database này:
+        String databaseUrl = "https://bookingapp-933ac-default-rtdb.firebaseio.com/";
+
+        database = FirebaseDatabase.getInstance(databaseUrl);
         mDatabase = database.getReference("Users");
     }
 
@@ -74,16 +75,12 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void setupDatePicker() {
+        edtDateOfBirth.setFocusable(false); // Ngăn hiện bàn phím
         edtDateOfBirth.setOnClickListener(v -> {
             final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(RegisterActivity.this,
-                    (view, year1, monthOfYear, dayOfMonth) -> edtDateOfBirth.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1),
-                    year, month, day);
-            datePickerDialog.show();
+            new DatePickerDialog(RegisterActivity.this,
+                    (view, year, month, day) -> edtDateOfBirth.setText(day + "/" + (month + 1) + "/" + year),
+                    c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
         });
     }
 
@@ -91,25 +88,14 @@ public class RegisterActivity extends AppCompatActivity {
         String email = edtEmail.getText().toString().trim();
         String password = edtMatKhau.getText().toString().trim();
         String confirmPassword = edtMatKhauhai.getText().toString().trim();
-        String username = edtTenDangNhap.getText().toString().trim();
-        String fullName = edtHoten.getText().toString().trim();
-        String phone = edtPhoneNumber.getText().toString().trim();
-        String idNumber = edtIdentityNumber.getText().toString().trim();
-        String dob = edtDateOfBirth.getText().toString().trim();
-        String gender = actvGender.getText().toString().trim();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(username) || TextUtils.isEmpty(fullName)) {
-            Toast.makeText(this, "Vui lòng nhập đầy đủ các trường bắt buộc", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(email) || password.length() < 6) {
+            Toast.makeText(this, "Email không được để trống và Mật khẩu > 6 ký tự", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            Toast.makeText(this, "Mật khẩu nhập lại không khớp", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (password.length() < 6) {
-            Toast.makeText(this, "Mật khẩu phải từ 6 ký tự trở lên", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Mật khẩu không khớp", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -118,22 +104,28 @@ public class RegisterActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            writeNewUser(user.getUid(), username, fullName, email, phone, idNumber, dob, gender);
+                            writeNewUser(user.getUid());
                         }
                     } else {
-                        Toast.makeText(RegisterActivity.this, "Đăng ký thất bại: " + task.getException().getMessage(),
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Đăng ký lỗi: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void writeNewUser(String userId, String username, String fullName, String email, String phone, String idNumber, String dob, String gender) {
-        User user = new User(username, fullName, email, phone, idNumber, dob, gender);
+    private void writeNewUser(String userId) {
+        User user = new User(
+                edtTenDangNhap.getText().toString(),
+                edtHoten.getText().toString(),
+                edtEmail.getText().toString(),
+                edtPhoneNumber.getText().toString(),
+                edtIdentityNumber.getText().toString(),
+                edtDateOfBirth.getText().toString(),
+                actvGender.getText().toString()
+        );
         mDatabase.child(userId).setValue(user)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                    finish(); // Close activity
-                })
-                .addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, "Lưu dữ liệu thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    Toast.makeText(RegisterActivity.this, "Thành công!", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
     }
 }
