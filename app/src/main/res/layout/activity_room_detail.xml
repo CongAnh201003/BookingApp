@@ -1,240 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="250dp">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <ImageView
-                android:id="@+id/imgRoomDetail"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax" />
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:navigationIcon="@drawable/baseline_arrow_back_ios_24" />
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+    android:background="#FFFFFF">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/txtRoomNameDetail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black" />
-
-            <!-- PHẦN CHỌN ĐIỀU KIỆN ĐẶT PHÒNG -->
+            <!-- Ảnh Header bo góc -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:strokeColor="#EEEEEE"
-                app:strokeWidth="1dp">
+                android:layout_height="350dp"
+                android:layout_margin="12dp"
+                app:cardCornerRadius="28dp"
+                app:cardElevation="0dp">
 
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="12dp">
+                    android:layout_height="match_parent">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Thời gian lưu trú"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="8dp"/>
-
-                    <LinearLayout
+                    <ImageView
+                        android:id="@+id/imgRoomDetail"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/dlmix" />
 
-                        <TextView
-                            android:id="@+id/txtCheckIn"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@drawable/back"
-                            android:backgroundTint="#F5F5F5"
-                            android:padding="10dp"
-                            android:text="Check-in"
-                            android:gravity="center"
-                            android:textColor="@android:color/black"/>
-
-                        <View android:layout_width="10dp" android:layout_height="match_parent"/>
-
-                        <TextView
-                            android:id="@+id/txtCheckOut"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@drawable/back"
-                            android:backgroundTint="#F5F5F5"
-                            android:padding="10dp"
-                            android:text="Check-out"
-                            android:gravity="center"
-                            android:textColor="@android:color/black"/>
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Số lượng khách"
-                        android:textStyle="bold"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="8dp"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <EditText
-                            android:id="@+id/edtAdults"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="Người lớn"
-                            android:inputType="number"
-                            android:background="@drawable/back"
-                            android:backgroundTint="#F5F5F5"
-                            android:padding="10dp"/>
-
-                        <View android:layout_width="10dp" android:layout_height="match_parent"/>
-
-                        <EditText
-                            android:id="@+id/edtChildren"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="Trẻ em"
-                            android:inputType="number"
-                            android:background="@drawable/back"
-                            android:backgroundTint="#F5F5F5"
-                            android:padding="10dp"/>
-                    </LinearLayout>
-
-                    <Button
-                        android:id="@+id/btnCheckAvailability"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="Kiểm tra phòng trống"
-                        android:backgroundTint="#1976D2"/>
-
-                </LinearLayout>
+                    <ImageView
+                        android:id="@+id/btnBack"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="16dp"
+                        android:background="@drawable/bg_circle_white"
+                        android:padding="8dp"
+                        android:src="@drawable/baseline_arrow_back_ios_24"
+                        app:tint="#333333" />
+                </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- PHẦN THÔNG TIN GIÁ (ẨN MẶC ĐỊNH) -->
             <LinearLayout
-                android:id="@+id/layoutPriceInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="16dp"
-                android:visibility="gone">
+                android:paddingHorizontal="20dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/txtRoomNameDetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_toStartOf="@+id/txtPriceDetail"
+                        android:text="Tên phòng"
+                        android:textColor="#222222"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtPriceDetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="$0"
+                        android:textColor="#D17842"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <!-- Lịch và khách -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="#F8F9FA"
+                    android:orientation="horizontal"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/txtCheckIn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Ngày đi" />
+
+                    <TextView
+                        android:id="@+id/txtCheckOut"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Ngày về" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnCheckAvailability"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Kiểm tra phòng trống" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Chi tiết thanh toán"
-                    android:textStyle="bold"
-                    android:textSize="18sp"/>
+                    android:layout_marginTop="12dp"
+                    android:text="Mô tả"
+                    android:textStyle="bold" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/txtDescriptionDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="8dp">
+                    android:layout_marginTop="8dp"
+                    android:textColor="#666666" />
+
+                <!-- Thông báo giá -->
+                <LinearLayout
+                    android:id="@+id/layoutPriceInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="#FFF3E0"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:visibility="gone">
+
                     <TextView
                         android:id="@+id/txtPriceCalc"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="1.200.000 x 2 đêm" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
                     <TextView
                         android:id="@+id/txtTotalPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2.400.000 VNĐ"
-                        android:textStyle="bold"
-                        android:textColor="#D32F2F"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Chính sách: Miễn phí hủy phòng trước 24h. Hoàn tiền 100% nếu hủy đúng quy định."
-                    android:textSize="12sp"
-                    android:textColor="#666666"/>
             </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Mô tả phòng"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtDescriptionDetail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="#444444" />
-
-            <View android:layout_width="match_parent" android:layout_height="100dp"/>
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardBookingAction"
+    <LinearLayout
+        android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:visibility="gone"
-        app:cardElevation="8dp"
-        app:cardCornerRadius="0dp">
+        android:background="#FFFFFF"
+        android:elevation="8dp"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edtAdults"
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="number"
+                android:text="2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="L / " />
+
+            <EditText
+                android:id="@+id/edtChildren"
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="number"
+                android:text="0" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="N" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnConfirmBooking"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="12dp"
-            android:text="TIẾN HÀNH ĐẶT PHÒNG"
-            android:backgroundTint="#333333"
-            android:textStyle="bold"/>
-    </com.google.android.material.card.MaterialCardView>
+            android:layout_height="55dp"
+            android:layout_marginStart="16dp"
+            android:backgroundTint="#1A237E"
+            android:text="ĐẶT PHÒNG NGAY"
+            app:cornerRadius="12dp" />
+    </LinearLayout>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

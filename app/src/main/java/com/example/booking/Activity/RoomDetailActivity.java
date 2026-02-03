@@ -5,20 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.EditText;import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.example.booking.Model.Room;
 import com.example.booking.R;
-import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,12 +30,12 @@ import java.util.concurrent.TimeUnit;
 public class RoomDetailActivity extends AppCompatActivity {
 
     private ImageView imgRoomDetail;
-    private TextView txtName, txtDescription, txtCheckIn, txtCheckOut, txtPriceCalc, txtTotalPrice;
+    private TextView txtName, txtDescription, txtPrice, txtCheckIn, txtCheckOut, txtPriceCalc, txtTotalPrice;
     private EditText edtAdults, edtChildren;
     private Button btnCheckAvailability, btnConfirmBooking;
     private LinearLayout layoutPriceInfo;
-    private MaterialCardView cardBookingAction;
-    
+    private ImageView btnBack;
+
     private Room room;
     private Calendar calendarIn, calendarOut;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -50,19 +47,20 @@ public class RoomDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room_detail);
 
         room = (Room) getIntent().getSerializableExtra("room_data");
-        
+
         initUi();
         displayRoomData();
-        
-        // Nhận dữ liệu từ Intent (BƯỚC 3: Kế thừa tiêu chí từ trang chủ)
         handleIntentData();
-        
         setupDatePickers();
 
         btnCheckAvailability.setOnClickListener(v -> checkAvailability());
-        
-        // Chuyển sang BƯỚC 4: Nhập thông tin người ở
+        btnBack.setOnClickListener(v -> finish());
+
         btnConfirmBooking.setOnClickListener(v -> {
+            if (diffDays <= 0) {
+                Toast.makeText(this, "Vui lòng kiểm tra tính trạng phòng trước", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(RoomDetailActivity.this, ConfirmBookingActivity.class);
             intent.putExtra("room_data", room);
             intent.putExtra("checkIn", calendarIn.getTimeInMillis());
@@ -72,6 +70,46 @@ public class RoomDetailActivity extends AppCompatActivity {
             intent.putExtra("totalPrice", diffDays * room.getPrice());
             startActivity(intent);
         });
+    }
+
+    private void initUi() {
+        imgRoomDetail = findViewById(R.id.imgRoomDetail);
+        txtName = findViewById(R.id.txtRoomNameDetail);
+        txtPrice = findViewById(R.id.txtPriceDetail);
+        txtDescription = findViewById(R.id.txtDescriptionDetail);
+        txtCheckIn = findViewById(R.id.txtCheckIn);
+        txtCheckOut = findViewById(R.id.txtCheckOut);
+        edtAdults = findViewById(R.id.edtAdults);
+        edtChildren = findViewById(R.id.edtChildren);
+        btnCheckAvailability = findViewById(R.id.btnCheckAvailability);
+        btnConfirmBooking = findViewById(R.id.btnConfirmBooking);
+        layoutPriceInfo = findViewById(R.id.layoutPriceInfo);
+        txtPriceCalc = findViewById(R.id.txtPriceCalc);
+        txtTotalPrice = findViewById(R.id.txtTotalPrice);
+        btnBack = findViewById(R.id.btnBack);
+
+        calendarIn = Calendar.getInstance();
+        calendarOut = Calendar.getInstance();
+        calendarOut.add(Calendar.DAY_OF_MONTH, 1);
+
+        txtCheckIn.setText(sdf.format(calendarIn.getTime()));
+        txtCheckOut.setText(sdf.format(calendarOut.getTime()));
+    }
+
+    private void displayRoomData() {
+        if (room != null) {
+            txtName.setText(room.getName());
+            txtPrice.setText(String.format(Locale.getDefault(), "%,.0f VNĐ/Đêm", room.getPrice()));
+            txtDescription.setText(room.getDescription());
+
+            if (room.getImageUrl() != null && !room.getImageUrl().isEmpty()) {
+                Glide.with(this)
+                        .load(room.getImageUrl())
+                        .placeholder(R.drawable.dlmix)
+                        .error(R.drawable.dlmix)
+                        .into(imgRoomDetail);
+            }
+        }
     }
 
     private void handleIntentData() {
@@ -85,45 +123,7 @@ public class RoomDetailActivity extends AppCompatActivity {
             txtCheckIn.setText(sdf.format(calendarIn.getTime()));
             txtCheckOut.setText(sdf.format(calendarOut.getTime()));
             edtAdults.setText(String.valueOf(guests));
-            
-            // Tự động kiểm tra luôn vì khách đã chọn ở trang chủ
             checkAvailability();
-        }
-    }
-
-    private void initUi() {
-        imgRoomDetail = findViewById(R.id.imgRoomDetail);
-        txtName = findViewById(R.id.txtRoomNameDetail);
-        txtDescription = findViewById(R.id.txtDescriptionDetail);
-        txtCheckIn = findViewById(R.id.txtCheckIn);
-        txtCheckOut = findViewById(R.id.txtCheckOut);
-        edtAdults = findViewById(R.id.edtAdults);
-        edtChildren = findViewById(R.id.edtChildren);
-        btnCheckAvailability = findViewById(R.id.btnCheckAvailability);
-        btnConfirmBooking = findViewById(R.id.btnConfirmBooking);
-        layoutPriceInfo = findViewById(R.id.layoutPriceInfo);
-        cardBookingAction = findViewById(R.id.cardBookingAction);
-        txtPriceCalc = findViewById(R.id.txtPriceCalc);
-        txtTotalPrice = findViewById(R.id.txtTotalPrice);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("");
-        }
-        toolbar.setNavigationOnClickListener(v -> finish());
-        
-        calendarIn = Calendar.getInstance();
-        calendarOut = Calendar.getInstance();
-        calendarOut.add(Calendar.DAY_OF_MONTH, 1);
-    }
-
-    private void displayRoomData() {
-        if (room != null) {
-            txtName.setText(room.getName());
-            txtDescription.setText(room.getDescription());
-            Glide.with(this).load(room.getImageUrl()).placeholder(R.drawable.dlmix).into(imgRoomDetail);
         }
     }
 
@@ -134,7 +134,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
     private void showDatePicker(boolean isCheckIn) {
         Calendar c = isCheckIn ? calendarIn : calendarOut;
-        new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+        DatePickerDialog dialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
             Calendar selected = Calendar.getInstance();
             selected.set(year, month, dayOfMonth);
             if (isCheckIn) {
@@ -145,13 +145,13 @@ public class RoomDetailActivity extends AppCompatActivity {
                 txtCheckOut.setText(sdf.format(selected.getTime()));
             }
             layoutPriceInfo.setVisibility(View.GONE);
-            cardBookingAction.setVisibility(View.GONE);
-        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+        dialog.show();
     }
 
     private void checkAvailability() {
-        if (calendarOut.before(calendarIn) || calendarOut.equals(calendarIn)) {
-            Toast.makeText(this, "Ngày không hợp lệ", Toast.LENGTH_SHORT).show();
+        if (!calendarOut.after(calendarIn)) {
+            Toast.makeText(this, "Ngày trả phòng phải sau ngày nhận phòng", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -168,7 +168,7 @@ public class RoomDetailActivity extends AppCompatActivity {
                     Long bOut = data.child("checkOutDate").getValue(Long.class);
                     String status = data.child("status").getValue(String.class);
 
-                    if (bIn != null && bOut != null && !"Cancelled".equals(status) && !"Expired".equals(status)) {
+                    if (bIn != null && bOut != null && !"Cancelled".equals(status)) {
                         if (start < bOut && end > bIn) bookedCount++;
                     }
                 }
@@ -176,6 +176,7 @@ public class RoomDetailActivity extends AppCompatActivity {
                 if (bookedCount < room.getTotalRooms()) {
                     showPriceCalculation();
                 } else {
+                    layoutPriceInfo.setVisibility(View.GONE);
                     Toast.makeText(RoomDetailActivity.this, "Hết phòng trong thời gian này", Toast.LENGTH_LONG).show();
                 }
             }
@@ -187,10 +188,11 @@ public class RoomDetailActivity extends AppCompatActivity {
     private void showPriceCalculation() {
         long diff = calendarOut.getTimeInMillis() - calendarIn.getTimeInMillis();
         diffDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+        if (diffDays == 0) diffDays = 1;
+
         double total = diffDays * room.getPrice();
         txtPriceCalc.setText(String.format(Locale.getDefault(), "%,.0f VNĐ x %d đêm", room.getPrice(), diffDays));
-        txtTotalPrice.setText(String.format(Locale.getDefault(), "%,.0f VNĐ", total));
+        txtTotalPrice.setText(String.format(Locale.getDefault(), "Tổng tiền: %,.0f VNĐ", total));
         layoutPriceInfo.setVisibility(View.VISIBLE);
-        cardBookingAction.setVisibility(View.VISIBLE);
     }
 }
