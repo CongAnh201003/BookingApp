@@ -7,19 +7,27 @@ public class Booking implements Serializable {
     private String userId;
     private String roomId;
     private String roomName;
-    private double price;
+    private String guestName;
+    private String guestPhone;
+    private long checkInDate;
+    private long checkOutDate;
+    private double totalPrice;
     private long timestamp;
     private String status;
 
     public Booking() {
     }
 
-    public Booking(String bookingId, String userId, String roomId, String roomName, double price, long timestamp, String status) {
+    public Booking(String bookingId, String userId, String roomId, String roomName, String guestName, String guestPhone, long checkInDate, long checkOutDate, double totalPrice, long timestamp, String status) {
         this.bookingId = bookingId;
         this.userId = userId;
         this.roomId = roomId;
         this.roomName = roomName;
-        this.price = price;
+        this.guestName = guestName;
+        this.guestPhone = guestPhone;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.totalPrice = totalPrice;
         this.timestamp = timestamp;
         this.status = status;
     }
@@ -36,12 +44,27 @@ public class Booking implements Serializable {
     public String getRoomName() { return roomName; }
     public void setRoomName(String roomName) { this.roomName = roomName; }
 
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public String getGuestName() { return guestName; }
+    public void setGuestName(String guestName) { this.guestName = guestName; }
+
+    public String getGuestPhone() { return guestPhone; }
+    public void setGuestPhone(String guestPhone) { this.guestPhone = guestPhone; }
+
+    public long getCheckInDate() { return checkInDate; }
+    public void setCheckInDate(long checkInDate) { this.checkInDate = checkInDate; }
+
+    public long getCheckOutDate() { return checkOutDate; }
+    public void setCheckOutDate(long checkOutDate) { this.checkOutDate = checkOutDate; }
+
+    public double getTotalPrice() { return totalPrice; }
+    public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
 
     public long getTimestamp() { return timestamp; }
     public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    // Fallback for old code using getPrice()
+    public double getPrice() { return totalPrice; }
 }

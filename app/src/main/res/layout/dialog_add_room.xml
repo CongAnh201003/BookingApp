@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thêm phòng mới"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"/>
+
+    <EditText
+        android:id="@+id/edtRoomNameAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên phòng"
+        android:inputType="text"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/edtRoomPriceAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Giá phòng (VNĐ)"
+        android:inputType="numberDecimal"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/edtRoomAdultsAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Số người lớn tối đa"
+        android:inputType="number"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/edtRoomChildrenAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Số trẻ em tối đa"
+        android:inputType="number"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/edtRoomDescAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Mô tả phòng"
+        android:inputType="textMultiLine"
+        android:lines="3"
+        android:gravity="top"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnSaveRoom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LƯU PHÒNG"
+        android:backgroundTint="#27AE60"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"/>
+
+</LinearLayout>

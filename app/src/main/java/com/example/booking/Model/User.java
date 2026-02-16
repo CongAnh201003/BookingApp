@@ -8,12 +8,14 @@ public class User {
     private String identityNumber;
     private String dateOfBirth;
     private String gender;
+    private String role; // "Customer", "Staff", "Admin"
+    private double balance; // Money received for Staff
 
     public User() {
         // Required for Firebase
     }
 
-    public User(String username, String fullName, String email, String phoneNumber, String identityNumber, String dateOfBirth, String gender) {
+    public User(String username, String fullName, String email, String phoneNumber, String identityNumber, String dateOfBirth, String gender, String role) {
         this.username = username;
         this.fullName = fullName;
         this.email = email;
@@ -21,6 +23,8 @@ public class User {
         this.identityNumber = identityNumber;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+        this.role = role;
+        this.balance = 0.0;
     }
 
     public String getUsername() { return username; }
@@ -43,4 +47,10 @@ public class User {
 
     public String getGender() { return gender; }
     public void setGender(String gender) { this.gender = gender; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+
+    public double getBalance() { return balance; }
+    public void setBalance(double balance) { this.balance = balance; }
 }

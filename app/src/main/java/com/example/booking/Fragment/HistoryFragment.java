@@ -1,12 +1,14 @@
-package com.example.booking.Activity;
+package com.example.booking.Fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,46 +23,40 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class BookingHistoryActivity extends AppCompatActivity {
+public class HistoryFragment extends Fragment {
 
-    private RecyclerView rvBookingHistory;
+    private RecyclerView rvHistory;
     private TextView txtNoHistory;
-    private ImageView btnBack;
     private BookingAdapter adapter;
-    private List<Booking> bookingList;
+    private List<Booking> bookingList = new ArrayList<>();
+    private DatabaseReference mDatabase;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_booking_history);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_history, container, false);
 
-        initUi();
+        rvHistory = view.findViewById(R.id.rvHistoryFragment);
+        txtNoHistory = view.findViewById(R.id.txtNoHistoryFragment);
+
+        adapter = new BookingAdapter(getActivity(), bookingList, false);
+        rvHistory.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvHistory.setAdapter(adapter);
+
         loadBookingHistory();
 
-        btnBack.setOnClickListener(v -> finish());
-    }
-
-    private void initUi() {
-        rvBookingHistory = findViewById(R.id.rvBookingHistory);
-        txtNoHistory = findViewById(R.id.txtNoHistory);
-        btnBack = findViewById(R.id.btnBackHistory);
-
-        bookingList = new ArrayList<>();
-        // Cập nhật constructor để truyền false (không phải Staff mode)
-        adapter = new BookingAdapter(this, bookingList, false);
-        rvBookingHistory.setLayoutManager(new LinearLayoutManager(this));
-        rvBookingHistory.setAdapter(adapter);
+        return view;
     }
 
     private void loadBookingHistory() {
         String userId = FirebaseAuth.getInstance().getUid();
         if (userId == null) return;
 
-        DatabaseReference bookingRef = FirebaseDatabase.getInstance().getReference("Bookings");
-        // Lọc các booking có userId khớp với người dùng hiện tại
-        bookingRef.orderByChild("userId").equalTo(userId).addValueEventListener(new ValueEventListener() {
+        mDatabase = FirebaseDatabase.getInstance("https://bookingapp-933ac-default-rtdb.firebaseio.com/").getReference("Bookings");
+        mDatabase.orderByChild("userId").equalTo(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 bookingList.clear();
@@ -70,20 +66,22 @@ public class BookingHistoryActivity extends AppCompatActivity {
                         bookingList.add(booking);
                     }
                 }
+                
+                // Đảo ngược danh sách để hiện cái mới nhất lên đầu
+                Collections.reverse(bookingList);
 
                 if (bookingList.isEmpty()) {
                     txtNoHistory.setVisibility(View.VISIBLE);
-                    rvBookingHistory.setVisibility(View.GONE);
+                    rvHistory.setVisibility(View.GONE);
                 } else {
                     txtNoHistory.setVisibility(View.GONE);
-                    rvBookingHistory.setVisibility(View.VISIBLE);
+                    rvHistory.setVisibility(View.VISIBLE);
                     adapter.notifyDataSetChanged();
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 }

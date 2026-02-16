@@ -39,22 +39,18 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void processPayment() {
-        // BƯỚC 7: Xác nhận thanh toán thành công
-        // Giả lập xử lý thanh toán...
+        // Sau khi khách thanh toán, trạng thái là "Paid" (Chờ Staff duyệt)
+        DatabaseReference bookingRef = FirebaseDatabase.getInstance("https://bookingapp-933ac-default-rtdb.firebaseio.com/").getReference("Bookings").child(bookingId);
         
-        DatabaseReference bookingRef = FirebaseDatabase.getInstance().getReference("Bookings").child(bookingId);
-        
-        // Cập nhật trạng thái PENDING -> CONFIRMED
-        bookingRef.child("status").setValue("Confirmed")
+        bookingRef.child("status").setValue("Paid")
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(PaymentActivity.this, "Thanh toán thành công! Đơn hàng đã được xác nhận.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(PaymentActivity.this, "Thanh toán thành công! Vui lòng chờ nhân viên xác nhận.", Toast.LENGTH_LONG).show();
                     
-                    // Quay về trang chủ
                     Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
                 })
-                .addOnFailureListener(e -> Toast.makeText(PaymentActivity.this, "Lỗi cập nhật đơn hàng: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Toast.makeText(PaymentActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }

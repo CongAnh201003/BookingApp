@@ -25,29 +25,19 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".Activity.RegisterActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".Activity.RoomDetailActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".Activity.ConfirmBookingActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".Activity.PaymentActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".Activity.BookingHistoryActivity"
-            android:exported="false" />
+        <activity android:name=".MainActivity" android:exported="false" />
+        <activity android:name=".Activity.RegisterActivity" android:exported="false" />
+        <activity android:name=".Activity.RoomDetailActivity" android:exported="false" />
+        <activity android:name=".Activity.ConfirmBookingActivity" android:exported="false" />
+        <activity android:name=".Activity.PaymentActivity" android:exported="false" />
+        <activity android:name=".Activity.BookingHistoryActivity" android:exported="false" />
+        <activity android:name=".Activity.ProfileActivity" android:exported="false" />
+        <activity android:name=".Activity.AdminActivity" android:exported="false" />
+        <activity android:name=".Activity.StaffActivity" android:exported="false" />
+        <activity android:name=".Activity.AdminRoomListActivity" android:exported="false" />
+        <activity android:name=".Activity.AdminBookingListActivity" android:exported="false" />
+        <activity android:name=".Activity.AddStaffActivity" android:exported="false" />
+        <activity android:name=".Activity.UserListActivity" android:exported="false" />
 
     </application>
 

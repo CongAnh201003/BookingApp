@@ -5,13 +5,22 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.booking.Model.Booking;
 import com.example.booking.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,10 +31,16 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
 
     private Context context;
     private List<Booking> bookingList;
+    private boolean isStaff;
+    private DatabaseReference mDatabase;
+    private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
-    public BookingAdapter(Context context, List<Booking> bookingList) {
+    public BookingAdapter(Context context, List<Booking> bookingList, boolean isStaff) {
         this.context = context;
         this.bookingList = bookingList;
+        this.isStaff = isStaff;
+        this.mDatabase = FirebaseDatabase.getInstance("https://bookingapp-933ac-default-rtdb.firebaseio.com/").getReference();
     }
 
     @NonNull
@@ -39,19 +54,71 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
     public void onBindViewHolder(@NonNull BookingViewHolder holder, int position) {
         Booking booking = bookingList.get(position);
         holder.txtRoomName.setText(booking.getRoomName());
-        holder.txtPrice.setText(String.format("%,.0f VNĐ", booking.getPrice()));
-        holder.txtStatus.setText(booking.getStatus());
+        holder.txtPrice.setText(String.format(Locale.getDefault(), "Tổng tiền: %,.0f VNĐ", booking.getTotalPrice()));
+        
+        String status = booking.getStatus();
+        holder.txtStatus.setText(status);
 
-        // Format date
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-        holder.txtDate.setText("Ngày đặt: " + sdf.format(new Date(booking.getTimestamp())));
+        holder.txtDate.setText("Ngày đặt: " + dateTimeFormat.format(new Date(booking.getTimestamp())));
+        
+        String stayTime = "Thời gian ở: " + dateFormat.format(new Date(booking.getCheckInDate())) + 
+                          " - " + dateFormat.format(new Date(booking.getCheckOutDate()));
+        holder.txtStayTime.setText(stayTime);
 
-        // Color status
-        if ("Pending".equals(booking.getStatus())) {
-            holder.txtStatus.setTextColor(Color.parseColor("#EF6C00"));
-        } else if ("Confirmed".equals(booking.getStatus())) {
-            holder.txtStatus.setTextColor(Color.parseColor("#2E7D32"));
+        // Reset visibility
+        holder.layoutActions.setVisibility(View.GONE);
+
+        if ("Pending".equals(status)) {
+            holder.txtStatus.setTextColor(Color.parseColor("#EF6C00")); // Cam
+            holder.txtStatus.setText("Chờ thanh toán");
+            holder.txtStatus.setBackgroundColor(Color.parseColor("#FFF3E0"));
+        } else if ("Paid".equals(status)) {
+            holder.txtStatus.setTextColor(Color.BLUE);
+            holder.txtStatus.setText("Đã thanh toán - Chờ duyệt");
+            holder.txtStatus.setBackgroundColor(Color.parseColor("#E3F2FD"));
+            if (isStaff) {
+                holder.layoutActions.setVisibility(View.VISIBLE);
+            }
+        } else if ("Confirmed".equals(status)) {
+            holder.txtStatus.setTextColor(Color.parseColor("#2E7D32")); // Xanh lá
+            holder.txtStatus.setText("Đã xác nhận");
+            holder.txtStatus.setBackgroundColor(Color.parseColor("#E8F5E9"));
+        } else {
+            holder.txtStatus.setTextColor(Color.RED);
+            holder.txtStatus.setText("Đã hủy");
+            holder.txtStatus.setBackgroundColor(Color.parseColor("#FFEBEE"));
         }
+
+        holder.btnApprove.setOnClickListener(v -> approveBooking(booking));
+        holder.btnCancel.setOnClickListener(v -> updateBookingStatus(booking.getBookingId(), "Cancelled"));
+    }
+
+    private void approveBooking(Booking booking) {
+        String staffId = FirebaseAuth.getInstance().getUid();
+        if (staffId == null) return;
+
+        mDatabase.child("Bookings").child(booking.getBookingId()).child("status").setValue("Confirmed")
+                .addOnSuccessListener(aVoid -> {
+                    mDatabase.child("Users").child(staffId).child("balance").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            double currentBalance = 0;
+                            if (snapshot.exists() && snapshot.getValue() != null) {
+                                currentBalance = snapshot.getValue(Double.class);
+                            }
+                            mDatabase.child("Users").child(staffId).child("balance").setValue(currentBalance + booking.getTotalPrice());
+                            Toast.makeText(context, "Duyệt thành công! Tiền đã về tài khoản.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {}
+                    });
+                });
+    }
+
+    private void updateBookingStatus(String bookingId, String status) {
+        mDatabase.child("Bookings").child(bookingId).child("status").setValue(status)
+                .addOnSuccessListener(aVoid -> Toast.makeText(context, "Đã cập nhật trạng thái đơn", Toast.LENGTH_SHORT).show());
     }
 
     @Override
@@ -60,7 +127,9 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
     }
 
     public static class BookingViewHolder extends RecyclerView.ViewHolder {
-        TextView txtRoomName, txtStatus, txtDate, txtPrice;
+        TextView txtRoomName, txtStatus, txtDate, txtPrice, txtStayTime;
+        LinearLayout layoutActions;
+        Button btnApprove, btnCancel;
 
         public BookingViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -68,6 +137,10 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             txtStatus = itemView.findViewById(R.id.txtBookingStatus);
             txtDate = itemView.findViewById(R.id.txtBookingDate);
             txtPrice = itemView.findViewById(R.id.txtBookingPrice);
+            txtStayTime = itemView.findViewById(R.id.txtBookingStayTime);
+            layoutActions = itemView.findViewById(R.id.layoutStaffActions);
+            btnApprove = itemView.findViewById(R.id.btnApprove);
+            btnCancel = itemView.findViewById(R.id.btnCancelBooking);
         }
     }
 }

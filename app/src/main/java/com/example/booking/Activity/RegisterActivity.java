@@ -57,13 +57,9 @@ public class RegisterActivity extends AppCompatActivity {
         imgBack = findViewById(R.id.imgBack);
     }
 
-    // TÌM ĐẾN HÀM initFirebase() TRONG RegisterActivity.java
     private void initFirebase() {
         mAuth = FirebaseAuth.getInstance();
-
-        // Xóa cái link cũ (link console firebase) và thay bằng link Database này:
         String databaseUrl = "https://bookingapp-933ac-default-rtdb.firebaseio.com/";
-
         database = FirebaseDatabase.getInstance(databaseUrl);
         mDatabase = database.getReference("Users");
     }
@@ -75,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void setupDatePicker() {
-        edtDateOfBirth.setFocusable(false); // Ngăn hiện bàn phím
+        edtDateOfBirth.setFocusable(false);
         edtDateOfBirth.setOnClickListener(v -> {
             final Calendar c = Calendar.getInstance();
             new DatePickerDialog(RegisterActivity.this,
@@ -113,14 +109,23 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void writeNewUser(String userId) {
+        String email = edtEmail.getText().toString().trim();
+        String role = "Customer"; // Mặc định là khách hàng
+
+        // Tự động gán quyền Admin nếu email là admin@gmail.com
+        if (email.equals("admin@gmail.com")) {
+            role = "Admin";
+        }
+
         User user = new User(
                 edtTenDangNhap.getText().toString(),
                 edtHoten.getText().toString(),
-                edtEmail.getText().toString(),
+                email,
                 edtPhoneNumber.getText().toString(),
                 edtIdentityNumber.getText().toString(),
                 edtDateOfBirth.getText().toString(),
-                actvGender.getText().toString()
+                actvGender.getText().toString(),
+                role
         );
         mDatabase.child(userId).setValue(user)
                 .addOnSuccessListener(aVoid -> {
