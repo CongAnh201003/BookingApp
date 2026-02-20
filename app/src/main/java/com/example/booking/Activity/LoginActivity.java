@@ -36,11 +36,8 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance("https://bookingapp-933ac-default-rtdb.firebaseio.com/").getReference();
 
-        // Kiểm tra nếu đã đăng nhập thì điều hướng ngay
-        if (mAuth.getCurrentUser() != null) {
-            checkUserRoleAndNavigate(mAuth.getCurrentUser().getUid());
-            return; 
-        }
+        // BẮT BUỘC ĐĂNG NHẬP: Xóa session cũ mỗi khi khởi động app để test luồng login
+        mAuth.signOut(); 
 
         setupLoginUi();
     }
@@ -54,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
 
         btnDangNhap.setOnClickListener(v -> loginUser());
         txtRegister.setOnClickListener(v -> {
-            Log.d("LOGIN_DEBUG", "Navigating to RegisterActivity");
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
     }
@@ -73,8 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         checkUserRoleAndNavigate(mAuth.getCurrentUser().getUid());
                     } else {
-                        Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + task.getException().getMessage(),
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -84,24 +79,15 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String role = snapshot.getValue(String.class);
-                
-                if (role == null) {
-                    mAuth.signOut();
-                    setupLoginUi(); // Khởi tạo lại UI và gán sự kiện cho các nút
-                    return;
-                }
+                if (role == null) role = "Customer";
 
                 Intent intent;
-                switch (role) {
-                    case "Admin":
-                        intent = new Intent(LoginActivity.this, AdminActivity.class);
-                        break;
-                    case "Staff":
-                        intent = new Intent(LoginActivity.this, StaffActivity.class);
-                        break;
-                    default:
-                        intent = new Intent(LoginActivity.this, MainActivity.class);
-                        break;
+                if ("Admin".equals(role)) {
+                    intent = new Intent(LoginActivity.this, AdminActivity.class);
+                } else if ("Staff".equals(role)) {
+                    intent = new Intent(LoginActivity.this, StaffActivity.class);
+                } else {
+                    intent = new Intent(LoginActivity.this, MainActivity.class);
                 }
                 startActivity(intent);
                 finish();

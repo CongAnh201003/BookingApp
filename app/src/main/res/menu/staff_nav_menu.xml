@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/staff_new_requests"
+        android:icon="@drawable/baseline_add_circle_outline_24"
+        android:title="Yêu cầu mới" />
+    <item
+        android:id="@+id/staff_my_history"
+        android:icon="@drawable/baseline_library_music_24"
+        android:title="Lịch sử duyệt" />
+    <item
+        android:id="@+id/staff_report"
+        android:icon="@drawable/qlng"
+        android:title="Báo cáo" />
+</menu>

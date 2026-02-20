@@ -14,6 +14,7 @@ public class Booking implements Serializable {
     private double totalPrice;
     private long timestamp;
     private String status;
+    private String staffId; // New field to track who handled the booking
 
     public Booking() {
     }
@@ -64,6 +65,9 @@ public class Booking implements Serializable {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public String getStaffId() { return staffId; }
+    public void setStaffId(String staffId) { this.staffId = staffId; }
 
     // Fallback for old code using getPrice()
     public double getPrice() { return totalPrice; }

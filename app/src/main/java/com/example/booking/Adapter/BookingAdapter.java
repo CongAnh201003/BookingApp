@@ -69,24 +69,20 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         holder.layoutActions.setVisibility(View.GONE);
 
         if ("Pending".equals(status)) {
-            holder.txtStatus.setTextColor(Color.parseColor("#EF6C00")); // Cam
+            holder.txtStatus.setTextColor(Color.parseColor("#EF6C00")); 
             holder.txtStatus.setText("Chờ thanh toán");
-            holder.txtStatus.setBackgroundColor(Color.parseColor("#FFF3E0"));
         } else if ("Paid".equals(status)) {
             holder.txtStatus.setTextColor(Color.BLUE);
             holder.txtStatus.setText("Đã thanh toán - Chờ duyệt");
-            holder.txtStatus.setBackgroundColor(Color.parseColor("#E3F2FD"));
             if (isStaff) {
                 holder.layoutActions.setVisibility(View.VISIBLE);
             }
         } else if ("Confirmed".equals(status)) {
-            holder.txtStatus.setTextColor(Color.parseColor("#2E7D32")); // Xanh lá
+            holder.txtStatus.setTextColor(Color.parseColor("#2E7D32")); 
             holder.txtStatus.setText("Đã xác nhận");
-            holder.txtStatus.setBackgroundColor(Color.parseColor("#E8F5E9"));
         } else {
             holder.txtStatus.setTextColor(Color.RED);
             holder.txtStatus.setText("Đã hủy");
-            holder.txtStatus.setBackgroundColor(Color.parseColor("#FFEBEE"));
         }
 
         holder.btnApprove.setOnClickListener(v -> approveBooking(booking));
@@ -97,8 +93,11 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         String staffId = FirebaseAuth.getInstance().getUid();
         if (staffId == null) return;
 
-        mDatabase.child("Bookings").child(booking.getBookingId()).child("status").setValue("Confirmed")
+        // Cập nhật trạng thái và gán staffId
+        mDatabase.child("Bookings").child(booking.getBookingId()).child("status").setValue("Confirmed");
+        mDatabase.child("Bookings").child(booking.getBookingId()).child("staffId").setValue(staffId)
                 .addOnSuccessListener(aVoid -> {
+                    // Cộng tiền vào balance của Staff
                     mDatabase.child("Users").child(staffId).child("balance").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -107,7 +106,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
                                 currentBalance = snapshot.getValue(Double.class);
                             }
                             mDatabase.child("Users").child(staffId).child("balance").setValue(currentBalance + booking.getTotalPrice());
-                            Toast.makeText(context, "Duyệt thành công! Tiền đã về tài khoản.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Duyệt thành công!", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override

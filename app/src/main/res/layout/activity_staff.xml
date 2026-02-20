@@ -34,12 +34,19 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvStaffBookings"
+    <FrameLayout
+        android:id="@+id/staff_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/staffBottomNavigation"
         app:layout_constraintTop_toBottomOf="@id/staffHeader" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/staffBottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/staff_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
