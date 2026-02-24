@@ -1,6 +1,7 @@
 package com.example.booking.Model;
+import java.io.Serializable;
 
-public class User {
+public class User implements Serializable {
     private String username;
     private String fullName;
     private String email;

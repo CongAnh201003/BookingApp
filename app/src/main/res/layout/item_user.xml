@@ -56,7 +56,31 @@
             android:text="0 VNĐ"
             android:textColor="#27AE60"
             android:textStyle="bold"
+            android:layout_marginEnd="8dp"
             android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/layoutAdminUserActions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnEditUser"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/baseline_edit_24"
+                app:tint="#3498DB" />
+
+            <ImageButton
+                android:id="@+id/btnDeleteUser"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/baseline_delete_24"
+                app:tint="#E74C3C" />
+        </LinearLayout>
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

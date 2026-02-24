@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,12 +21,27 @@ import java.util.Locale;
 
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder> {
 
+    public interface OnRoomActionListener {
+        void onEdit(Room room);
+        void onDelete(Room room);
+    }
+
     private Context context;
     private List<Room> roomList;
+    private boolean isAdmin;
+    private OnRoomActionListener listener;
 
     public RoomAdapter(Context context, List<Room> roomList) {
         this.context = context;
         this.roomList = roomList;
+        this.isAdmin = false;
+    }
+
+    public RoomAdapter(Context context, List<Room> roomList, boolean isAdmin, OnRoomActionListener listener) {
+        this.context = context;
+        this.roomList = roomList;
+        this.isAdmin = isAdmin;
+        this.listener = listener;
     }
 
     @NonNull
@@ -45,7 +62,6 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
         holder.txtRating.setText(String.valueOf(room.getStarRating()));
         holder.txtPrice.setText(String.format(Locale.getDefault(), "%,.0f VNĐ/đêm", room.getPrice()));
 
-        // Xử lý ảnh: Nếu link trống, hiện ảnh mặc định dlmix
         if (room.getImageUrl() == null || room.getImageUrl().isEmpty()) {
             holder.imgRoom.setImageResource(R.drawable.dlmix);
         } else {
@@ -54,6 +70,18 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
                     .placeholder(R.drawable.dlmix)
                     .error(R.drawable.dlmix)
                     .into(holder.imgRoom);
+        }
+
+        if (isAdmin) {
+            holder.layoutAdminActions.setVisibility(View.VISIBLE);
+            holder.btnEdit.setOnClickListener(v -> {
+                if (listener != null) listener.onEdit(room);
+            });
+            holder.btnDelete.setOnClickListener(v -> {
+                if (listener != null) listener.onDelete(room);
+            });
+        } else {
+            holder.layoutAdminActions.setVisibility(View.GONE);
         }
 
         holder.itemView.setOnClickListener(v -> {
@@ -71,6 +99,8 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     public static class RoomViewHolder extends RecyclerView.ViewHolder {
         ImageView imgRoom;
         TextView txtName, txtPrice, txtDescription, txtRating;
+        LinearLayout layoutAdminActions;
+        ImageButton btnEdit, btnDelete;
 
         public RoomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,6 +109,9 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
             txtPrice = itemView.findViewById(R.id.txtPrice);
             txtDescription = itemView.findViewById(R.id.txtDescription);
             txtRating = itemView.findViewById(R.id.txtRating);
+            layoutAdminActions = itemView.findViewById(R.id.layoutAdminRoomActions);
+            btnEdit = itemView.findViewById(R.id.btnEditRoom);
+            btnDelete = itemView.findViewById(R.id.btnDeleteRoom);
         }
     }
 }

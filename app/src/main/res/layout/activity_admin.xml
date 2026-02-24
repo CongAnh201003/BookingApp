@@ -89,19 +89,10 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"/>
 
-            <Button
-                android:id="@+id/btnAddStaff"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:text="TẠO TÀI KHOẢN NHÂN VIÊN"
-                android:backgroundTint="#8E44AD"
-                app:cornerRadius="8dp"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="12dp">
+                android:orientation="horizontal">
                 <Button
                     android:id="@+id/btnViewStaffs"
                     android:layout_width="0dp"

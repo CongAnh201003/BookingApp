@@ -22,7 +22,7 @@ public class AdminActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
     private TextView txtTotalRevenue;
-    private Button btnManageRooms, btnManageBookings, btnAddStaff, btnViewStaffs, btnViewCustomers, btnLogout;
+    private Button btnManageRooms, btnManageBookings, btnViewStaffs, btnViewCustomers, btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +44,6 @@ public class AdminActivity extends AppCompatActivity {
         });
 
         // 2. Quản lý nhân sự
-        btnAddStaff.setOnClickListener(v -> {
-            startActivity(new Intent(AdminActivity.this, AddStaffActivity.class));
-        });
-
         btnViewStaffs.setOnClickListener(v -> {
             Intent intent = new Intent(AdminActivity.this, UserListActivity.class);
             intent.putExtra("role", "Staff");
@@ -74,7 +70,6 @@ public class AdminActivity extends AppCompatActivity {
         txtTotalRevenue = findViewById(R.id.txtTotalRevenue);
         btnManageRooms = findViewById(R.id.btnManageRooms);
         btnManageBookings = findViewById(R.id.btnManageBookings);
-        btnAddStaff = findViewById(R.id.btnAddStaff);
         btnViewStaffs = findViewById(R.id.btnViewStaffs);
         btnViewCustomers = findViewById(R.id.btnViewCustomers);
         btnLogout = findViewById(R.id.btnAdminLogout);
